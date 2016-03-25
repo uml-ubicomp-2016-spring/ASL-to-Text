@@ -7,7 +7,7 @@ class GuiCtrl:
       self.model = ModelReporter(self)
       self.root = root
       self.view = View(self.root)
-      self.view.setSubtitle('')
+      self.view.setSubtitle('TEST')
    #do thing when model updated
    
    def gotTxtUpdate(self):
@@ -17,26 +17,24 @@ class GuiCtrl:
       
 class View:
    def loadView(self):
-      self.subtitle = Label(self.ctrl, font=('Helvetica','36'), text = "TEST", fg='black', bg='gray30', wraplength=80, anchor=S, pady=50) #for fullscreen
+      self.subtitle = Label(self.ctrl, font=('Helvetica','36'), fg='gray23', bg='gray30', anchor=S, pady=50)
       self.subtitle.master.wm_attributes("-topmost", True)
       self.subtitle.master.wm_attributes("-transparentcolor", "gray30")
       self.subtitle.pack(fill=BOTH, expand=1, side=BOTTOM)
 
    def __init__(self, ctrl):
-     self.ctrl = ctrl.root
+     self.ctrl = ctrl
      self.loadView()
 
      
    def setSubtitle(self, txt):
       self.subtitle.configure(text = txt)
      
-   
 class ModelReporter():
    
    def __init__(self, ctrl):
       self.ctrl = ctrl
       self.txt = "TEST"
-      
    
    def getText(self):
       return self.txt
