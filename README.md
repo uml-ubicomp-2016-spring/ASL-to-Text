@@ -3,7 +3,9 @@ Simple ASL-to-Text translator using the LeapMotion
 
 ## Contributors
  @TycheLaughs
+
  @KDibble
+ 
  @jasminemoran
 
 ## Progress (Week 3/28)
