@@ -2,11 +2,9 @@
 Simple ASL-to-Text translator using the LeapMotion
 
 ## Contributors
- @TycheLaughs
-
- @KDibble
- 
- @jasminemoran
+ [TycheLaughs](http://github.com/TycheLaughs)
+ [KDibble](http://github.com/KDibble)
+ [jasminemoran](http://github.com/jasminemoran)
 
 ## Progress (Week 3/28)
 - [ ] All team members have forked the repo
