@@ -73,7 +73,83 @@ class View:
       #print "model updating"
 
 ### end MVC GUI implementation ###
+#
+COMPARRISON_PERCENT = 30
 
+def get_angles(vector_array):
+   return_array = []
+   i = 0
+   while (i < 5):
+      j = 0
+      while (j < 5):
+         return_array.append(vector_array[i].angle_to(vector_array[j]))
+         j = j + 1
+      i = i + 1
+   return return_array
+
+def compare(base_letter, compare_letter):
+   # loop through each finger and compare the two letters together
+   i = 0
+   all_match = True
+   while (i < 5):
+    #   print "\ni = %d" % (i)
+      j = 0
+      while (j < 5):
+        #  print "\tj = %d" % (j)
+        # compare this i/j pairing
+        #  print "%s and %s" % (base_letter[i], base_letter[j])
+         base_dot = base_letter[i].angle_to(base_letter[j])
+         compare_dot = compare_letter[i].angle_to(compare_letter[j])
+        #  print ""
+         print "%s and %s" % (base_dot, compare_dot)
+         if (base_dot < 0.001 and base_dot > -0.001):
+            comparrison = 0
+         else:
+            comparrison = 100 * (compare_dot - base_dot) / base_dot
+         print "percentage comparrison %s" % (comparrison)
+         if comparrison < COMPARRISON_PERCENT and comparrison > (COMPARRISON_PERCENT * -1):
+            all_match = all_match and True
+         else:
+            all_match = False
+         j = j + 1
+      i = i + 1
+      print ""
+   print "all_match: %s\n" % (all_match)
+   return all_match
+
+def compare_angles_thumb(base_angles, compare_vectors):
+   all_match = True
+   compare_angles = get_angles(compare_vectors)
+   i = 0
+   while (i < 5):
+    #   print "%s and %s" % (base_angles[i], compare_angles[i])
+      comparrison = 100 * (compare_angles[i] - base_angles[i]) / (base_angles[i] + 0.00000001)
+      print "percentage comparrison %s" % (comparrison)
+      if comparrison < COMPARRISON_PERCENT and comparrison > (COMPARRISON_PERCENT * -1):
+         all_match = all_match and True
+      else:
+         all_match = False
+      i = i + 1
+
+   print "all_match: %s\n" % (all_match)
+   return all_match
+
+def compare_angles(base_angles, compare_vectors):
+   all_match = True
+   compare_angles = get_angles(compare_vectors)
+   i = 0
+   while (i < len(base_angles)):
+    #   print "%s and %s" % (base_angles[i], compare_angles[i])
+      comparrison = 100 * (compare_angles[i] - base_angles[i]) / (base_angles[i] + 0.00000001)
+      print "percentage comparrison %s" % (comparrison)
+      if comparrison < COMPARRISON_PERCENT and comparrison > (COMPARRISON_PERCENT * -1):
+         all_match = all_match and True
+      else:
+         all_match = False
+      i = i + 1
+
+   #print "all_match: %s\n" % (all_match)
+   return all_match
 
 #a subclass of Leap.Listener based on Sample.py
 class aslListener(Leap.Listener):
@@ -97,22 +173,71 @@ class aslListener(Leap.Listener):
       print "Exited"
 
    def on_frame(self, controller):
-      finger_vectors = [Leap.Vector(-0.370363, 0.805763, -0.462144),
-         Leap.Vector(0.0483599, -0.989515, -0.136093),
-         Leap.Vector(-0.0608738, -0.997436, -0.037624),
-         Leap.Vector(-0.199149, -0.979907, 0.0110007),
-         Leap.Vector(-0.38556, -0.92044, 0.064291)]
-
-      #thumb = Leap.Vector(-0.370363, 0.805763, -0.462144)
-      #pointer = Leap.Vector(0.0483599, -0.989515, -0.136093)
-      #middle = Leap.Vector(-0.0608738, -0.997436, -0.037624)
-      #ring = Leap.Vector(-0.199149, -0.979907, 0.0110007)
-      #pinky = Leap.Vector(-0.38556, -0.92044, 0.064291)
+      finger_vectors = [Leap.Vector(0.260498, -0.677901, 0.687452),
+         Leap.Vector(-0.393398, 0.827915, -0.399743),
+         Leap.Vector(-0.39042, 0.813348, -0.431321),
+         Leap.Vector(-0.286566, 0.8197, -0.495956),
+         Leap.Vector(-0.216815, 0.854775, -0.47154)]
+      A_angles = [0.0,
+      2.8812789917,
+      2.859770298,
+      2.84813141823,
+      2.73459911346,
+      2.8812789917,
+      0.0,
+      0.118831209838,
+      0.228779360652,
+      0.383088201284,
+      2.859770298,
+      0.118831209838,
+      0.0,
+      0.117045581341,
+      0.267506659031,
+      2.84813141823,
+      0.228779360652,
+      0.117045581341,
+      0.0,
+      0.154956310987,
+      2.73459911346,
+      0.383088201284,
+      0.267506659031,
+      0.154956310987,
+      0.0]
+      B_angles =[0.0,
+           0.439740777016,
+           0.527846693993,
+           0.577073693275,
+           0.63708627224,
+           0.439740777016,
+           0.0,
+           0.100545287132,
+           0.154377490282,
+           0.201784655452,
+           0.527846693993,
+           0.100545287132,
+           0.0,
+           0.0538404807448,
+           0.109854474664,
+           0.577073693275,
+           0.154377490282,
+           0.0538404807448,
+           0.0,
+           0.0698691532016,
+           0.63708627224,
+           0.201784655452,
+           0.109854474664,
+           0.0698691532016,
+           0.0]
+      all_letter_angles = [A_angles, B_angles]
+      letter_names = [
+         "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+         "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
       frame = controller.frame()
       #print "got a frame"
 
       for hand in frame.hands:
          handType = "Left hand" if hand.is_left else "Right hand"
+        #  print "%s" % (hand.pointables[1].direction)
          # Get fingers
          #for finger in hand.fingers:
             #print "    %s finger, id: %d, length: %fmm, width: %fmm" % (
@@ -121,22 +246,38 @@ class aslListener(Leap.Listener):
             #   finger.length,
             #   finger.width)
          #print "\n"
-         i = 0
-         all_match = True
-         for pointable in hand.pointables:
-             #print " direction %s" % (pointable.direction)
-             dot_product = pointable.direction.dot(finger_vectors[i])
-             #print "dot product %s" % (dot_product)
-             if dot_product > 0.94:
-                all_match = all_match and True
-             else:
-                all_match = False
-             #print "%s all_match" % (all_match)
-             i = i + 1
-         if all_match and self.prev_letter is not "A":
-            print "match!\n"
-            self.report.textChanged("A")
-            self.prev_letter = "A"
+
+        #  for finger in hand.fingers:
+        #     distal_direction = finger.bone(3).direction
+        #     print "direction %s" % (distal_direction)
+         current_vectors = []
+         for finger in hand.fingers:
+            current_vectors.append(finger.bone(3).direction)
+            # print "%s" % (finger.bone(3).direction)
+         letter_index = 0
+         all_match = False
+         for letter in all_letter_angles:
+            all_match = compare_angles_thumb(letter, current_vectors)
+            if all_match:
+               break
+            letter_index = letter_index + 1
+        #  all_match = compare(finger_vectors, current_vectors)
+        #  all_match = compare(finger_vectors, hand.pointables)
+        #  for pointable in hand.pointables:
+        #      #print " direction %s" % (pointable.direction)
+        #      dot_product = pointable.direction.dot(finger_vectors[i])
+        #      #print "dot product %s" % (dot_product)
+        #      if dot_product > 0.94:
+        #         all_match = all_match and True
+        #      else:
+        #         all_match = False
+        #      #print "%s all_match" % (all_match)
+        #      i = i + 1
+         if all_match:
+            print "match %s!" % (letter_names[letter_index])
+            self.report.textChanged(letter_names[letter_index])
+            self.prev_letter = letter_names[letter_index]
+         print "\n\n"
 
     #   for gesture in frame.gestures():
     #
