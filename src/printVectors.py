@@ -108,15 +108,15 @@ class aslListener(Leap.Listener):
    def on_frame(self, controller):
       frame = controller.frame()
       #print "got a frame"
-
+      distal_directions = []
       for hand in frame.hands:
          handType = "Left hand" if hand.is_left else "Right hand"
-         print "\nhand_type: %s" % (handType)
-         print "pointables:"
-         pointable_directions = []
-         for pointable in hand.pointables:
-            pointable_directions.append(pointable.direction)
-            print "   Leap.Vector%s," % (pointable.direction)
+         #print "\nhand_type: %s" % (handType)
+         #print "pointables:"
+         #pointable_directions = []
+         #for pointable in hand.pointables:
+         #   pointable_directions.append(pointable.direction)
+            #print "   Leap.Vector%s," % (pointable.direction)
 
          print "distal directions:"
          distal_directions = []
@@ -124,9 +124,13 @@ class aslListener(Leap.Listener):
             distal_directions.append(finger.bone(3).direction)
             print "   Leap.Vector%s," % (finger.bone(3).direction)
 
-      print "fistal_directions angle set"
-      for angle in get_angles(distal_directions):
-         print "   %s," % (angle)
+      if distal_directions:
+         print "distal_directions angle set"
+         retrieved_angles = get_angles(distal_directions)
+         for angle in retrieved_angles[:-1]:
+            print "   %s," % (angle)
+         else:
+            print "   %s" % (angle)
 
 def main():
    root = Tk()
