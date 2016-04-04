@@ -52,7 +52,10 @@ class Model():
       return self.txt
 
    def textChanged(self, text):
-      self.txt = text
+      if len(self.txt) < 12:
+         self.txt = self.txt + text
+      else:
+         self.txt = text
       self.ctrl.gotTxtUpdate()  #signal controller of change
 
 class View:
@@ -65,8 +68,6 @@ class View:
    def __init__(self, ctrl):
      self.ctrl = ctrl
      self.loadView()
-     print "got to end of View init"
-
 
    def setSubtitle(self, txt):
       self.subtitle.configure(text = txt)
@@ -74,7 +75,7 @@ class View:
 
 ### end MVC GUI implementation ###
 #
-COMPARRISON_PERCENT = 30
+COMPARISON_PERCENT = 50
 
 def get_angles(vector_array):
    return_array = []
@@ -103,11 +104,11 @@ def compare(base_letter, compare_letter):
         #  print ""
          print "%s and %s" % (base_dot, compare_dot)
          if (base_dot < 0.001 and base_dot > -0.001):
-            comparrison = 0
+            comparison = 0
          else:
-            comparrison = 100 * (compare_dot - base_dot) / base_dot
-         print "percentage comparrison %s" % (comparrison)
-         if comparrison < COMPARRISON_PERCENT and comparrison > (COMPARRISON_PERCENT * -1):
+            comparison = 100 * (compare_dot - base_dot) / base_dot
+         #print "percentage comparison %s" % (comparison)
+         if comparison < COMPARISON_PERCENT and comparison > (COMPARISON_PERCENT * -1):
             all_match = all_match and True
          else:
             all_match = False
@@ -123,9 +124,9 @@ def compare_angles_thumb(base_angles, compare_vectors):
    i = 0
    while (i < 5):
     #   print "%s and %s" % (base_angles[i], compare_angles[i])
-      comparrison = 100 * (compare_angles[i] - base_angles[i]) / (base_angles[i] + 0.00000001)
-      print "percentage comparrison %s" % (comparrison)
-      if comparrison < COMPARRISON_PERCENT and comparrison > (COMPARRISON_PERCENT * -1):
+      comparison = 100 * (compare_angles[i] - base_angles[i]) / (base_angles[i] + 0.00000001)
+      #print "percentage comparison %s" % (comparison)
+      if abs(comparison) < COMPARISON_PERCENT:
          all_match = all_match and True
       else:
          all_match = False
@@ -140,9 +141,9 @@ def compare_angles(base_angles, compare_vectors):
    i = 0
    while (i < len(base_angles)):
     #   print "%s and %s" % (base_angles[i], compare_angles[i])
-      comparrison = 100 * (compare_angles[i] - base_angles[i]) / (base_angles[i] + 0.00000001)
-      print "percentage comparrison %s" % (comparrison)
-      if comparrison < COMPARRISON_PERCENT and comparrison > (COMPARRISON_PERCENT * -1):
+      comparison = 100 * (compare_angles[i] - base_angles[i]) / (base_angles[i] + 0.00000001)
+      #print "percentage comparison %s" % (comparison)
+      if comparison < COMPARISON_PERCENT and comparison > (COMPARISON_PERCENT * -1):
          all_match = all_match and True
       else:
          all_match = False
@@ -154,7 +155,7 @@ def compare_angles(base_angles, compare_vectors):
 #a subclass of Leap.Listener based on Sample.py
 class aslListener(Leap.Listener):
    finger_names = ['Thumb', 'Index', 'Middle', 'Ring', 'Pinky']
-   prev_letter = "B"
+   #prev_letter = "B"
    #allows the listener to communicate with the model
    #listener instantiated in Ctrl
    def extraUtils(self, model):
@@ -173,36 +174,63 @@ class aslListener(Leap.Listener):
       print "Exited"
 
    def on_frame(self, controller):
-      finger_vectors = [Leap.Vector(0.260498, -0.677901, 0.687452),
-         Leap.Vector(-0.393398, 0.827915, -0.399743),
-         Leap.Vector(-0.39042, 0.813348, -0.431321),
-         Leap.Vector(-0.286566, 0.8197, -0.495956),
-         Leap.Vector(-0.216815, 0.854775, -0.47154)]
+    #  finger_vectors = [Leap.Vector(0.260498, -0.677901, 0.687452),
+    #     Leap.Vector(-0.393398, 0.827915, -0.399743),
+    #     Leap.Vector(-0.39042, 0.813348, -0.431321),
+    #     Leap.Vector(-0.286566, 0.8197, -0.495956),
+    #     Leap.Vector(-0.216815, 0.854775, -0.47154)]
+
+    #letter_angles = [thumb and thumb,
+    #   thumb and index,
+    #   thumb and middle,
+    #   thumb and ring,
+    #   thumb and pinkly,
+    #   index and thumb,
+    #   index and index,
+    #   index and middle,
+    #   index and ring,
+    #   index and pinky,
+    #   middle and thumb,
+    #   middle and index,
+    #   middle and middle,
+    #   middle and ring,
+    #   middle and pinky,
+    #   ring and thumb,
+    #   ring and index,
+    #   ring and middle,
+    #   ring and ring,
+    #   ring and pinky,
+    #   pinky and thumb,
+    #   pinky and index,
+    #   pinky and middle,
+    #   pinky and ring,
+    #   pinky and pinky]
+
       A_angles = [0.0,
-      2.8812789917,
-      2.859770298,
-      2.84813141823,
-      2.73459911346,
-      2.8812789917,
-      0.0,
-      0.118831209838,
-      0.228779360652,
-      0.383088201284,
-      2.859770298,
-      0.118831209838,
-      0.0,
-      0.117045581341,
-      0.267506659031,
-      2.84813141823,
-      0.228779360652,
-      0.117045581341,
-      0.0,
-      0.154956310987,
-      2.73459911346,
-      0.383088201284,
-      0.267506659031,
-      0.154956310987,
-      0.0]
+          2.8812789917,
+          2.859770298,
+          2.84813141823,
+          2.73459911346,
+          2.8812789917,
+          0.0,
+          0.118831209838,
+          0.228779360652,
+          0.383088201284,
+          2.859770298,
+          0.118831209838,
+          0.0,
+          0.117045581341,
+          0.267506659031,
+          2.84813141823,
+          0.228779360652,
+          0.117045581341,
+          0.0,
+          0.154956310987,
+          2.73459911346,
+          0.383088201284,
+          0.267506659031,
+          0.154956310987,
+          0.0]
       B_angles =[0.0,
            0.439740777016,
            0.527846693993,
@@ -228,7 +256,132 @@ class aslListener(Leap.Listener):
            0.109854474664,
            0.0698691532016,
            0.0]
-      all_letter_angles = [A_angles, B_angles]
+      C_angles = [0.0,
+         0.565682411194,
+         0.548766136169,
+         0.647555172443,
+         1.09946036339,
+         0.565682411194,
+         0.0,
+         0.0179408397526,
+         0.352951109409,
+         0.841872930527,
+         0.548766136169,
+         0.0179408397526,
+         0.0,
+         0.346947342157,
+         0.840921521187,
+         0.647555172443,
+         0.352951109409,
+         0.346947342157,
+         0.0,
+         0.51339751482,
+         1.09946036339,
+         0.841872930527,
+         0.840921521187,
+         0.51339751482,
+         0.51339751482]
+      D_angles = [0.0,
+           0.880243360996,
+           1.00771903992,
+           1.9491314888,
+           2.23631477356,
+           0.880243360996,
+           0.0,
+           0.395872354507,
+           2.08581185341,
+           2.18799972534,
+           1.00771903992,
+           0.395872354507,
+           0.0,
+           1.69160568714,
+           1.80022823811,
+           1.9491314888,
+           2.08581185341,
+           1.69160568714,
+           0.0,
+           0.291275531054,
+           2.23631477356,
+           2.18799972534,
+           1.80022823811,
+           0.291275531054,
+           0.291275531054]
+      E_angles = [ 0.0,
+         0.308618754148,
+         2.73403167725,
+         2.82854390144,
+         2.84681677818,
+         0.308618754148,
+         0.0,
+         3.0257191658,
+         3.04934453964,
+         2.96922564507,
+         2.73403167725,
+         3.0257191658,
+         0.0,
+         0.104628279805,
+         0.17910091579,
+         2.82854390144,
+         3.04934453964,
+         0.104628279805,
+         0.0,
+         0.0865492895246,
+         2.84681677818,
+         2.96922564507,
+         0.17910091579,
+         0.0865492895246,
+         0.0865492895246]
+      F_angles = [ 0.0,
+         1.96462583542,
+         0.490814357996,
+         0.490148037672,
+         0.459969967604,
+         1.96462583542,
+         0.0,
+         2.21380853653,
+         2.40438628197,
+         2.42444562912,
+         0.490814357996,
+         2.21380853653,
+         0.0,
+         0.249927476048,
+         0.422325372696,
+         0.490148037672,
+         2.40438628197,
+         0.249927476048,
+         0.0,
+         0.190423130989,
+         0.459969967604,
+         2.42444562912,
+         0.422325372696,
+         0.190423130989,
+         0.190423130989]
+      G_angles = [0.0,
+         1.06423842907,
+         0.987863242626,
+         1.54763281345,
+         2.09381890297,
+         1.06423842907,
+         0.0,
+         0.189559593797,
+         1.38221013546,
+         1.9089962244,
+         0.987863242626,
+         0.189559593797,
+         0.0,
+         1.22131979465,
+         1.78623831272,
+         1.54763281345,
+         1.38221013546,
+         1.22131979465,
+         0.0,
+         0.626338541508,
+         2.09381890297,
+         1.9089962244,
+         1.78623831272,
+         0.626338541508,
+         0.626338541508]
+      all_letter_angles = [A_angles, B_angles, C_angles, D_angles, E_angles, F_angles, G_angles]
       letter_names = [
          "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
          "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
@@ -276,8 +429,10 @@ class aslListener(Leap.Listener):
          if all_match:
             print "match %s!" % (letter_names[letter_index])
             self.report.textChanged(letter_names[letter_index])
-            self.prev_letter = letter_names[letter_index]
+            #self.prev_letter = letter_names[letter_index]
+
          print "\n\n"
+         time.sleep(.5)
 
     #   for gesture in frame.gestures():
     #
@@ -297,7 +452,7 @@ class aslListener(Leap.Listener):
 
 def main():
    root = Tk()
-   root.title('GUI Box Test')
+   root.title('ASL-to-Text')
    root.attributes("-fullscreen", True) #for fullscreen
    app = Ctrl(root)
 
