@@ -6,12 +6,17 @@ Simple ASL-to-Text translator using the LeapMotion
 + [KDibble](http://github.com/KDibble)
 + [jasminemoran](http://github.com/jasminemoran)
 
-## Progress (Week 4/04) -- proposed items
-- [ ] ???
-- [ ] ???
-- [ ] Improve matching algorithms/expand pool of matches
-- [ ] Machine learning research
+## Progress (Week 4/18) -- forecasted
+- [ ] Implement motion gestures
 
+## Progress (Week 4/11) -- proposed items
+- [ ] Integrate machine learning into gestures
+- [ ] Gather all of the data for the required gestures
+
+## Progress (Week 4/04)
+- [ ] Improve matching algorithms/expand pool of matches
+- [x] Machine learning research: Using scikit-learn
+- [x] Code refactor and cleanup
 
 ## Progress (Week 3/28)
 - [x] All team members have forked the repo
