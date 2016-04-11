@@ -6,6 +6,41 @@ sys.path += ["/../lib/Leap", "../lib/x64", "../lib"]
 import Leap
 import distalData as data
 
+from sklearn import svm
+import numpy as np
+
+import csv, re
+
+def getGestureDataFromFile():
+   with open('../data/gestureData.csv', 'rb') as dataFile:
+      reader = csv.reader(dataFile))
+      for row in reader:
+         print(row)
+         matcher = re.match(r'target (\w+) data (.+)$',  row, re.I | re.M) #then match the second group
+         print(matcher.group(1))
+         print(matcher.group(2))
+
+
+
+#get the data
+#get the targets
+compareMachine = DataCompare()
+
+class DataCompare():
+   def __init__(self, data, targets):
+      self.clf = svm.SVC() #this is the single class variable
+    #   data = np.array(angles)
+    #   targets = np.array(targets
+      self.clf.fit(data, targets)
+      print("data")
+      print(data)
+      print("targets")
+      print(targets)
+
+   def matchGesture(self, formattedData):
+      result = str(self.clf.predict([formattedData]))[2:-2] #predicts which letter this is
+    #   print(result)
+      return result #How are we handling things that shouldn't match?
 
 COMPARISON_PERCENT = 30
 

@@ -18,15 +18,37 @@ import numpy as np
 
 
 
-clf = svm.SVC()
+# clf = svm.SVC()
+# data = np.array([data.A_angles, data.B_angles, data.C_angles])
+# targets = np.array(['A', 'B', 'C'])
+# clf.fit(data, targets)
+# # print("data")
+# # print(data)
+# # print("\ntargets")
+# # print(targets)
+# predictData = np.array(data[1]) # this is the poll from leap motion step
+# # print("predictData")
+# # print(predictData)
+# result = str(clf.predict([predictData]))[2:-2] #predicts which letter this is
+# print(result)
+
+class DataCompare():
+   def __init__(self, data, targets):
+      self.clf = svm.SVC() #this is the single class variable
+    #   data = np.array(angles)
+    #   targets = np.array(targets
+      self.clf.fit(data, targets)
+      print("data")
+      print(data)
+      print("targets")
+      print(targets)
+
+   def matchGesture(self, formattedData):
+      result = str(self.clf.predict([formattedData]))[2:-2] #predicts which letter this is
+    #   print(result)
+      return result #How are we handling things that shouldn't match?
+
 data = np.array([data.A_angles, data.B_angles, data.C_angles])
 targets = np.array(['A', 'B', 'C'])
-clf.fit(data, targets)
-# print("data")
-# print(data)
-# print("\ntargets")
-# print(targets)
-predictData = np.array(data[1])
-# print("predictData")
-# print(predictData)
-print(clf.predict([predictData]))
+compare = DataCompare(data, targets)
+print(compare.matchGesture(np.array(data[1])))
