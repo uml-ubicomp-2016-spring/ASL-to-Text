@@ -9,7 +9,7 @@ Simple ASL-to-Text translator using the LeapMotion
 ## Progress (Week 4/19 - 4/25) -- forecasted
 - [ ] Implement motion gestures
 
-## Progress (Week 4/12 - 4/18) -- proposed items
+## Progress (Week 4/12 - 4/18) -- proposed items (DEMO ON 4/18. If we can't by 4/16, let Prof. Chen know)
 - [ ] Integrate machine learning into gestures
 - [ ] Gather all of the data for the required gestures
 
