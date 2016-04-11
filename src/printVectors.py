@@ -23,8 +23,10 @@ class aslListener(Leap.Listener):
    finger_names = ['Thumb', 'Index', 'Middle', 'Ring', 'Pinky']
    #allows the listener to communicate with the model
    #listener instantiated in Ctrl
-   def extraUtils(self, model):
-      self.report = model
+   startYet = 0
+
+   def extraUtils(self):
+      self.startYet = 1
 
    def on_init(self, controller):
       print "Initialized"
@@ -41,47 +43,73 @@ class aslListener(Leap.Listener):
    def on_frame(self, controller):
       frame = controller.frame()
       #print "got a frame"
-      distal_directions = []
-      for hand in frame.hands:
-         handType = "Left hand" if hand.is_left else "Right hand"
-         #print "\nhand_type: %s" % (handType)
-         #print "pointables:"
-         #pointable_directions = []
-         #for pointable in hand.pointables:
-         #   pointable_directions.append(pointable.direction)
-            #print "   Leap.Vector%s," % (pointable.direction)
+      if self.startYet == 1:
+          distal_directions = []
+          inter_directions = []
+          proximal_directions = []
+          wrist_angle = 0
+          for hand in frame.hands:
+             handType = "Left hand" if hand.is_left else "Right hand"
+             activeHand =  frame.hands.frontmost
+             activeArm = activeHand.arm
+             arm_direction = activeArm.direction
+             hand_direction = activeHand.direction
+             wrist_angle = hand_direction.dot(arm_direction)
 
-         print "distal directions:"
-         distal_directions = []
-         for finger in hand.fingers:
-            distal_directions.append(finger.bone(3).direction)
-            print "   Leap.Vector%s," % (finger.bone(3).direction)
+             print "begin frame data:"
+             for finger in activeHand.fingers:
+                distal_directions.append(finger.bone(3).direction)
+                #print "   Leap.Vector%s," % (finger.bone(3).direction)
+                inter_directions.append(finger.bone(2).direction)
+                proximal_directions.append(finger.bone(1).direction)
 
-      if distal_directions:
-         print "distal_directions angle set"
-         retrieved_angles = get_angles(distal_directions)
-         for angle in retrieved_angles[:-1]:
-            print "   %s," % (angle)
-         else:
-            print "   %s" % (angle)
+          if distal_directions:
+             print "distal_directions angle set"
+             retrieved_angles = get_angles(distal_directions)
+             for angle in retrieved_angles[:-1]:
+                print "   %s," % (angle)
+             else:
+                print "   %s" % (angle)
+
+          if inter_directions:
+             print "intermediate_directions angle set"
+             retrieved_angles = get_angles(inter_directions)
+             for angle in retrieved_angles[:-1]:
+                print "   %s," % (angle)
+             else:
+                print "   %s" % (angle)
+
+          if proximal_directions:
+             print "proximal_directions angle set"
+             retrieved_angles = get_angles(proximal_directions)
+             for angle in retrieved_angles[:-1]:
+                print "   %s," % (angle)
+             else:
+                print "   %s" % (angle)
+             print "hand_direction.dot(arm_direction): %s" % (wrist_angle)
+
 
 def main():
-  listener = aslListener()
-  controller = Leap.Controller()
-  controller.add_listener(listener)
-  print "Press Enter to quit..."
-  #need to replace this block with some input from View to trigger exit and so on
-  try:
-     sys.stdin.readline()
-  except KeyboardInterrupt:
-     pass
-  finally:
-  # Remove the sample listener when done
-     controller.remove_listener(listener)
+   listener = aslListener()
+   controller = Leap.Controller()
+   controller.add_listener(listener)
+   print "Press <Enter> to start recording data... and <Enter> again later to quit"
+   sys.stdin.readline()
+   listener.extraUtils();
+
+
+   #need to replace this block with some input from View to trigger exit and so on
+   try:
+      sys.stdin.readline()
+   except KeyboardInterrupt:
+      pass
+   finally:
+   # Remove the sample listener when done
+      controller.remove_listener(listener)
 
 
 if __name__ == '__main__':
-    main()
+   main()
 
 #refs:
 #  Leap:
