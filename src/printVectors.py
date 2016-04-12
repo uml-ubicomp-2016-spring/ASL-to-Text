@@ -7,16 +7,31 @@ sys.path += ["/../lib/Leap", "../lib/x64", "../lib"]
 import Leap
 #from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 
-def get_angles(vector_array):
-   return_array = []
-   i = 0
-   while (i < 5):
-      j = 0
-      while (j < 5):
-         return_array.append(vector_array[i].angle_to(vector_array[j]))
-         j = j + 1
-      i = i + 1
-   return return_array
+#def get_angles(vector_array):
+#   return_array = []
+#   i = 0
+#   while (i < 5):
+#      j = 0
+#      while (j < 5):
+#         return_array.append(vector_array[i].angle_to(vector_array[j]))
+#         j = j + 1
+#      i = i + 1
+#   return return_array
+
+def crunch_vector(vector_item):
+   print '   %f, %f, %f,' % (vector_item.x, vector_item.y, vector_item.z)
+
+def crunch_vector_last(vector_item):
+   print '   %f, %f, %f' % (vector_item.x, vector_item.y, vector_item.z)
+
+def extract_coords(vector_array):
+   for item in vector_array:
+      print '   %f, %f, %f,' % (item.x, item.y, item.z)
+#   for item in vector_array[:-1]:
+#      print '   %f, %f, %f,' % (item.x, item.y, item.z)
+#   else:
+#     print '   %f, %f, %f' % (item.x, item.y, item.z)
+
 
 #a subclass of Leap.Listener based on Sample.py
 class aslListener(Leap.Listener):
@@ -63,30 +78,41 @@ class aslListener(Leap.Listener):
                 inter_directions.append(finger.bone(2).direction)
                 proximal_directions.append(finger.bone(1).direction)
 
-          if distal_directions:
-             print "distal_directions angle set"
-             retrieved_angles = get_angles(distal_directions)
-             for angle in retrieved_angles[:-1]:
-                print "   %s," % (angle)
-             else:
-                print "   %s" % (angle)
+             if distal_directions:
+                extract_coords(distal_directions)
+             if inter_directions:
+                extract_coords(inter_directions)
+             if proximal_directions:
+                extract_coords(proximal_directions)
+                crunch_vector(hand_direction)
+                crunch_vector_last(arm_direction)
 
-          if inter_directions:
-             print "intermediate_directions angle set"
-             retrieved_angles = get_angles(inter_directions)
-             for angle in retrieved_angles[:-1]:
-                print "   %s," % (angle)
-             else:
-                print "   %s" % (angle)
 
-          if proximal_directions:
-             print "proximal_directions angle set"
-             retrieved_angles = get_angles(proximal_directions)
-             for angle in retrieved_angles[:-1]:
-                print "   %s," % (angle)
-             else:
-                print "   %s" % (angle)
-             print "hand_direction.dot(arm_direction): %s" % (wrist_angle)
+
+#          if distal_directions:
+#             print "distal_directions angle set"
+#             retrieved_angles = get_angles(distal_directions)
+#             for angle in retrieved_angles[:-1]:
+#                print "   %s," % (angle)
+#             else:
+#                print "   %s" % (angle)
+#
+#          if inter_directions:
+#             print "intermediate_directions angle set"
+#             retrieved_angles = get_angles(inter_directions)
+#             for angle in retrieved_angles[:-1]:
+#                print "   %s," % (angle)
+#             else:
+#                print "   %s" % (angle)
+#
+#          if proximal_directions:
+#             print "proximal_directions angle set"
+#             retrieved_angles = get_angles(proximal_directions)
+#             for angle in retrieved_angles[:-1]:
+#                print "   %s," % (angle)
+#             else:
+#                print "   %s" % (angle)
+#             print "hand_direction.dot(arm_direction): %s" % (wrist_angle)
 
 
 def main():
