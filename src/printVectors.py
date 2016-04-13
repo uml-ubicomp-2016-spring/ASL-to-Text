@@ -18,19 +18,22 @@ import Leap
 #      i = i + 1
 #   return return_array
 
-def crunch_vector(vector_item):
-   print '   %f, %f, %f,' % (vector_item.x, vector_item.y, vector_item.z)
+def crunch_vector(vector_item, buf):
+   buf += '%f,%f,%f,' % (vector_item.x, vector_item.y, vector_item.z)
+   return buf
 
-def crunch_vector_last(vector_item):
-   print '   %f, %f, %f' % (vector_item.x, vector_item.y, vector_item.z)
+def crunch_vector_last(vector_item, buf):
+   buf += '%f,%f,%f' % (vector_item.x, vector_item.y, vector_item.z)
+   return buf
 
-def extract_coords(vector_array):
+def extract_coords(vector_array, buf):
    for item in vector_array:
-      print '   %f, %f, %f,' % (item.x, item.y, item.z)
+      buf += '%f,%f,%f,' % (item.x, item.y, item.z)
 #   for item in vector_array[:-1]:
 #      print '   %f, %f, %f,' % (item.x, item.y, item.z)
 #   else:
 #     print '   %f, %f, %f' % (item.x, item.y, item.z)
+   return buf
 
 
 #a subclass of Leap.Listener based on Sample.py
@@ -39,6 +42,14 @@ class aslListener(Leap.Listener):
    #allows the listener to communicate with the model
    #listener instantiated in Ctrl
    startYet = 0
+   buf = ""
+   def getBuf(self):
+      self.buf = self.buf[:-1]
+      self.buf += '\n'
+      return self.buf
+
+   def addTarget(self, target):
+      self.buf = "%s," % target.strip()
 
    def extraUtils(self):
       self.startYet = 1
@@ -69,9 +80,8 @@ class aslListener(Leap.Listener):
              activeArm = activeHand.arm
              arm_direction = activeArm.direction
              hand_direction = activeHand.direction
-             wrist_angle = hand_direction.dot(arm_direction)
 
-             print "begin frame data:"
+             #print "begin frame data:"
              for finger in activeHand.fingers:
                 distal_directions.append(finger.bone(3).direction)
                 #print "   Leap.Vector%s," % (finger.bone(3).direction)
@@ -79,15 +89,17 @@ class aslListener(Leap.Listener):
                 proximal_directions.append(finger.bone(1).direction)
 
              if distal_directions:
-                extract_coords(distal_directions)
+                #self.buf += "begin frame:\n"
+                self.buf = extract_coords(distal_directions, self.buf)
              if inter_directions:
-                extract_coords(inter_directions)
+                self.buf =extract_coords(inter_directions, self.buf)
              if proximal_directions:
-                extract_coords(proximal_directions)
-                crunch_vector(hand_direction)
-                crunch_vector_last(arm_direction)
+                self.buf =extract_coords(proximal_directions, self.buf)
+                self.buf =crunch_vector(hand_direction, self.buf)
+                #crunch_vector_last(arm_direction)
+                self.buf =crunch_vector(arm_direction, self.buf)
 
-
+                time.sleep(1)
 
 #          if distal_directions:
 #             print "distal_directions angle set"
@@ -116,10 +128,15 @@ class aslListener(Leap.Listener):
 
 
 def main():
+   f = open('../data/gestureData.csv','a')
    listener = aslListener()
    controller = Leap.Controller()
    controller.add_listener(listener)
-   print "Press <Enter> to start recording data... and <Enter> again later to quit"
+   #read in a letter, add to buffer (fcn)
+   print "Enter the target for the samples"
+   currentTarget = sys.stdin.readline()
+   listener.addTarget(currentTarget)
+   print "Press <Enter> to start recording data... and <Enter> again to quit"
    sys.stdin.readline()
    listener.extraUtils();
 
@@ -127,6 +144,8 @@ def main():
    #need to replace this block with some input from View to trigger exit and so on
    try:
       sys.stdin.readline()
+      f.write(listener.getBuf())
+
    except KeyboardInterrupt:
       pass
    finally:
