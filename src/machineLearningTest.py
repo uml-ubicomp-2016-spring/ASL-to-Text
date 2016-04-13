@@ -1,3 +1,35 @@
+import os, sys, inspect, thread, time
+import numpy as np
+
+import csv, re
+with open('../data/data.csv', 'rb') as dataFile:
+   reader = csv.reader(dataFile)
+   numCol=len(next(reader)) # Read first line and count columns
+   dataFile.seek(0)              # go back to beginning of file
+   numRow = len(list(reader)) # count the number of rows
+   dataFile.seek(0)              # go back to beginning of file
+   targets = np.empty(numRow, dtype=object)
+   data = np.empty([numRow, numCol - 1], np.float64)
+
+   rowCount = 0
+   for row in reader: # make an array for each row
+      column = -1
+    #   target = ''
+    #   rowData = np.empty(numCol - 1, np.int32)
+      for col in row:
+         if column is -1:
+            targets[rowCount] = col
+         else:
+            data[rowCount, column] = col
+         column = column + 1 # end of column for loop
+      rowCount = rowCount + 1 # end of row for loop
+
+   print(targets)
+   print(data)
+
+
+
+
 # from sklearn import datasets
 # iris = datasets .load_iris()
 # digits = datasets.load_digits()
@@ -32,23 +64,23 @@ import numpy as np
 # result = str(clf.predict([predictData]))[2:-2] #predicts which letter this is
 # print(result)
 
-class DataCompare():
-   def __init__(self, data, targets):
-      self.clf = svm.SVC() #this is the single class variable
-    #   data = np.array(angles)
-    #   targets = np.array(targets
-      self.clf.fit(data, targets)
-      print("data")
-      print(data)
-      print("targets")
-      print(targets)
-
-   def matchGesture(self, formattedData):
-      result = str(self.clf.predict([formattedData]))[2:-2] #predicts which letter this is
-    #   print(result)
-      return result #How are we handling things that shouldn't match?
-
-data = np.array([data.A_angles, data.B_angles, data.C_angles])
-targets = np.array(['A', 'B', 'C'])
-compare = DataCompare(data, targets)
-print(compare.matchGesture(np.array(data[1])))
+# class DataCompare():
+#    def __init__(self, data, targets):
+#       self.clf = svm.SVC() #this is the single class variable
+#     #   data = np.array(angles)
+#     #   targets = np.array(targets
+#       self.clf.fit(data, targets)
+#       print("data")
+#       print(data)
+#       print("targets")
+#       print(targets)
+#
+#    def matchGesture(self, formattedData):
+#       result = str(self.clf.predict([formattedData]))[2:-2] #predicts which letter this is
+#     #   print(result)
+#       return result #How are we handling things that shouldn't match?
+#
+# data = np.array([data.A_angles, data.B_angles, data.C_angles])
+# targets = np.array(['A', 'B', 'C'])
+# compare = DataCompare(data, targets)
+# print(compare.matchGesture(np.array(data[1])))
