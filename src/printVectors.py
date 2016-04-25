@@ -98,8 +98,8 @@ class aslListener(Leap.Listener):
                 self.buf =crunch_vector(hand_direction, self.buf)
                 #crunch_vector_last(arm_direction)
                 self.buf =crunch_vector(arm_direction, self.buf)
-
-                time.sleep(1)
+                self.buf += 'END OF LINE,'
+                time.sleep(5)
 
 #          if distal_directions:
 #             print "distal_directions angle set"

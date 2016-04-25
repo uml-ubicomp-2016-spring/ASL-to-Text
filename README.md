@@ -7,11 +7,11 @@ Simple ASL-to-Text translator using the LeapMotion
 + [jasminemoran](http://github.com/jasminemoran)
 
 ## Progress (Week 4/19 - 4/25) -- forecasted
-- [ ] Implement motion gestures
+- [x] Implement motion gestures
 
 ## Progress (Week 4/12 - 4/18) -- proposed items (DEMO ON 4/22. If we can't by 4/19, let Prof. Chen know)
-- [ ] Integrate machine learning into gestures
-- [ ] Gather all of the data for the required gestures
+- [x] Integrate machine learning into gestures
+- [x] Gather all of the data for the required gestures (MOSTLY)
 
 ## Progress (Week 4/04 - 4/11)
 - [ ] ~~Improve matching algorithms/expand pool of matches~~
