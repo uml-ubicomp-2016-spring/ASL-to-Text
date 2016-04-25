@@ -1,3 +1,10 @@
+# ASL-to-Text
+# Ubiquitous Computing final project, Spring 2016
+# Authors: Kevin Dibble, Jasmine Moran, Susan Souza
+# File specific authors: Kevin Dibble
+# File description:
+#   This is a purely development file and should be removed at development end
+
 import os, sys, inspect, thread, time
 import numpy as np
 
