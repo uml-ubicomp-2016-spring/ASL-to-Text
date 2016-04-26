@@ -1,4 +1,11 @@
-
+# ASL-to-Text
+# Ubiquitous Computing final project, Spring 2016
+# Authors: Kevin Dibble, Jasmine Moran, Susan Souza
+# File specific authors: Suzan Souza
+# File description:
+#   This file handles the management of the graphical overlay that prints
+#   characters to the screen. This file is imported into the other files
+#
 
 from Tkinter import *
 from leapASL import *
