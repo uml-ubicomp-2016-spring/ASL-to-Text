@@ -166,7 +166,7 @@ class aslListener(Leap.Listener):
          result = compareMachine.matchGesture(np.array(self.buf))
          #self.buf = [] # don't forget to reset this!
          if len(self.buf) >= 1479:
-            self.buf[51:]
+            self.buf = self.buf[51:]
          print(result)
          self.printedSpace = False
          self.report.textChanged(result)
@@ -178,3 +178,7 @@ class aslListener(Leap.Listener):
              self.frameCount = 0
              self.printedSpace = True
              self.report.textChanged(' ')
+             iList = [0.0] * 51
+             self.buf = self.buf + iList;
+             del iList[:]
+             self.buf = self.buf[51:]

@@ -8,3 +8,9 @@ t = t[1:]
 t.append('f')
 for item in t:
     print item
+print ' '
+f = [1, 2, 3]
+time.sleep(1)
+s = t + f
+for item in s:
+    print item
