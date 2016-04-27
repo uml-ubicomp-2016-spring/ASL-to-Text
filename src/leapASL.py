@@ -99,16 +99,9 @@ class aslListener(Leap.Listener):
    resultCount = 0
    passedThree = 0
    previousResult = " "
+   previousPrintChar = ""
    printedSpace = False
-   # this is a debug sample entry for the machine to make sure it works
-   sample = [0.538109,-0.68696,0.48839,-0.560825,0.719204,-0.410147,-0.509568,
-            0.733951,-0.449062,-0.386425,0.775132,-0.499846,-0.2683,0.802056,
-            -0.533592,0.717797,-0.654975,0.236168,-0.253205,0.957649,0.137099,
-            -0.137588,0.99033,0.017771,0.020345,0.998759,-0.045456,0.218458,
-            0.969222,-0.113513,0.834387,-0.547252,-0.065674,0.530824,0.182306,
-            0.827642,0.621974,0.235733,0.746712,0.651065,0.166717,0.740486,
-            0.724168,0.066919,0.686369,-0.292726,0.924451,-0.24434,-0.344353,
-            0.558389,-0.754734]
+   staticLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v','w', 'x', 'y']
 
    def extraUtils(self, model):
       self.report = model
@@ -116,8 +109,6 @@ class aslListener(Leap.Listener):
    def on_init(self, controller):
       print "Initialized"
       getGestureDataFromFile()
-      #debug to make sure that the machine matches with itself
-      #print(compareMachine.matchGesture(np.array(self.sample)))
 
    # From the sample
    def on_connect(self, controller):
@@ -139,60 +130,66 @@ class aslListener(Leap.Listener):
       inter_directions = []
       proximal_directions = []
       wrist_angle = 0
+      if not frame.hands.is_empty:
+         # attempt to match every hand in view
+         for hand in frame.hands:
+            handType = "Left hand" if hand.is_left else "Right hand"
+            activeHand =  frame.hands.frontmost
+            activeArm = activeHand.arm
+            arm_direction = activeArm.direction
+            hand_direction = activeHand.direction
 
-      # attempt to match every hand in view
-      for hand in frame.hands:
-         handType = "Left hand" if hand.is_left else "Right hand"
-         activeHand =  frame.hands.frontmost
-         activeArm = activeHand.arm
-         arm_direction = activeArm.direction
-         hand_direction = activeHand.direction
+            # get the finger bone directions (all three bones)
+            for finger in activeHand.fingers:
+               distal_directions.append(finger.bone(3).direction)
+               inter_directions.append(finger.bone(2).direction)
+               proximal_directions.append(finger.bone(1).direction)
 
-         # get the finger bone directions (all three bones)
-         for finger in activeHand.fingers:
-            distal_directions.append(finger.bone(3).direction)
-            inter_directions.append(finger.bone(2).direction)
-            proximal_directions.append(finger.bone(1).direction)
+            # Add those finger directions to the buffer
+            if distal_directions:
+               self.buf = multi_vector_extract(distal_directions, self.buf)
+            if inter_directions:
+               self.buf = multi_vector_extract(inter_directions, self.buf)
+            if proximal_directions:
+               self.buf = multi_vector_extract(proximal_directions, self.buf)
+               self.buf = vector_extract(hand_direction, self.buf)
+               self.buf = vector_extract(arm_direction, self.buf)
 
-         # Add those finger directions to the buffer
-         if distal_directions:
-            self.buf = multi_vector_extract(distal_directions, self.buf)
-         if inter_directions:
-            self.buf = multi_vector_extract(inter_directions, self.buf)
-         if proximal_directions:
-            self.buf = multi_vector_extract(proximal_directions, self.buf)
-            self.buf = vector_extract(hand_direction, self.buf)
-            self.buf = vector_extract(arm_direction, self.buf)
+               # match the data, print the result, and update the gui with the result
+               result = ""
+              # print("testing frame:")
+               if len(self.buf) == 1479: #this is unstable. should find away to save the row length when we get the data
+                  result = compareMachine.matchGesture(np.array(self.buf))
+                  if not result ==' ' and not result == '':
+                       print(result)
+                  self.frameCount = 0
+               else:
+                  print "not enough data to match yet"
+                  #self.buf = [] # don't forget to reset this!
+               if len(self.buf) >= 1479:
+                  self.buf = self.buf[51:]
 
-         # match the data, print the result, and update the gui with the result
-         result = ""
-         print("testing frame:")
-         if len(self.buf) == 1479: #this is unstable. should find away to save the row length when we get the data
-            result = compareMachine.matchGesture(np.array(self.buf))
-            print(result)
-         else:
-            print "not enough data to match yet"
-         #self.buf = [] # don't forget to reset this!
-         if len(self.buf) >= 1479:
-            self.buf = self.buf[51:]
+               if result == self.previousResult:
+                  self.resultCount += 1
+               else:
+                  self.resultCount = 0
+                  self.previousResult = result
+               if result in self.staticLetters:
+                   if self.resultCount == 10:
+                      self.printedSpace = False
+                      self.report.textChanged(result)
+                      #self.resultCount = 0
+               else:
+                  if not self.previousPrintChar == result:
+                     self.printedSpace = False
+                     self.report.textChanged(result)
+                     self.previousPrintChar = result
 
-         if result == self.previousResult:
-            self.resultCount += 1
-         else:
-            self.resultCount = 0
-
-         self.previousResult = result
-         if self.resultCount == 2:
-            self.printedSpace = False
-            self.report.textChanged(result)
-
-
-
-
-         print "\n"
+            print "\n"
          #time.sleep(2.2) #how long to wait between matchings
       else:
          #append an entire frame of 0.0 to the buffer and shift the buffer as usual
+        # print "invalid frame " + (str)(self.frameCount)
          iList = [0.0] * 51
          self.buf = self.buf + iList;
          del iList[:]
@@ -202,12 +199,18 @@ class aslListener(Leap.Listener):
          #37 frames is about a second
          if self.frameCount == 37:
             self.passedThree += 1
+            self.frameCount = 0
+            print self.passedThree
             #it's been three seconds, so clear the text displayed in view
-            if self.passedThree == 3:
+            if self.passedThree == 15:
                self.passedThree = 0
+               #print "clearing text"
                self.report.clearText()
             #if we go an entire second with invalid data
-            if self.printedSpace == False:
-               self.frameCount = 0
+            if self.printedSpace == False and self.passedThree == 2:
                self.printedSpace = True
                self.report.textChanged(' ')#print a space
+               self.previousPrintChar = ' '
+            else:
+               self.previousResult = ''
+               self.previousPrintChar = ''
