@@ -173,12 +173,12 @@ class aslListener(Leap.Listener):
          print "\n"
          #time.sleep(2.2) #how long to wait between matchings
       else:
+         iList = [0.0] * 51
+         self.buf = self.buf + iList;
+         del iList[:]
+         self.buf = self.buf[51:]
          self.frameCount += 1
          if self.frameCount == 37 and self.printedSpace == False:
              self.frameCount = 0
              self.printedSpace = True
              self.report.textChanged(' ')
-             iList = [0.0] * 51
-             self.buf = self.buf + iList;
-             del iList[:]
-             self.buf = self.buf[51:]
