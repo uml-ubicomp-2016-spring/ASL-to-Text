@@ -48,7 +48,7 @@ compareMachine = DataCompare()
 # this grabs the data from the csv data file and sets up the machine
 import csv, re
 def getGestureDataFromFile():
-   with open('../data/gestureDataSimple.csv', 'rb') as dataFile:
+   with open('../data/gestureDataLong.csv', 'rb') as dataFile:
       reader = csv.reader(dataFile)
       numCol = len(next(reader)) # Read first line and count columns
       dataFile.seek(0)              # go back to beginning of file
@@ -117,7 +117,7 @@ class aslListener(Leap.Listener):
       print "Initialized"
       getGestureDataFromFile()
       #debug to make sure that the machine matches with itself
-      print(compareMachine.matchGesture(np.array(self.sample)))
+      #print(compareMachine.matchGesture(np.array(self.sample)))
 
    # From the sample
    def on_connect(self, controller):
@@ -165,12 +165,16 @@ class aslListener(Leap.Listener):
             self.buf = vector_extract(arm_direction, self.buf)
 
          # match the data, print the result, and update the gui with the result
+         result = ""
          print("testing frame:")
-         result = compareMachine.matchGesture(np.array(self.buf))
+         if len(self.buf) == 1479: #this is unstable. should find away to save the row length when we get the data
+            result = compareMachine.matchGesture(np.array(self.buf))
+            print(result)
+         else:
+            print "not enough data to match yet"
          #self.buf = [] # don't forget to reset this!
          if len(self.buf) >= 1479:
             self.buf = self.buf[51:]
-         print(result)
 
          if result == self.previousResult:
             self.resultCount += 1
@@ -178,7 +182,7 @@ class aslListener(Leap.Listener):
             self.resultCount = 0
 
          self.previousResult = result
-         if self.resulCount == 2:
+         if self.resultCount == 2:
             self.printedSpace = False
             self.report.textChanged(result)
 
