@@ -28,6 +28,8 @@ class Ctrl:
       listener.extraUtils(self.model) #ensure the listener can send changes to the model
 
       controller.add_listener(listener)
+
+
       self.root.mainloop()
       print "Press Enter to quit..."
       #need to replace this block with some input from View to trigger exit and so on
@@ -54,11 +56,15 @@ class Model():
       return self.txt
 
    def textChanged(self, text):
-      if len(self.txt) < 12:
+      if len(self.txt) < 26:
          self.txt = self.txt + text
       else:
          self.txt = text
       self.ctrl.gotTxtUpdate()  #signal controller of change
+
+   def clearText(self):
+      self.txt = ''
+      self.ctrl.gotTxtUpdate()
 
 class View:
    def loadView(self):

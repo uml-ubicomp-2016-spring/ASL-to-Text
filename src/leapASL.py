@@ -50,7 +50,7 @@ import csv, re
 def getGestureDataFromFile():
    with open('../data/gestureDataSimple.csv', 'rb') as dataFile:
       reader = csv.reader(dataFile)
-      numCol=len(next(reader)) # Read first line and count columns
+      numCol = len(next(reader)) # Read first line and count columns
       dataFile.seek(0)              # go back to beginning of file
       numRow = len(list(reader)) # count the number of rows
       dataFile.seek(0)              # go back to beginning of file
@@ -95,6 +95,11 @@ class aslListener(Leap.Listener):
    #allows the listener to communicate with the model
    #listener instantiated in Ctrl
    buf = []
+   frameCount = 0
+   resultCount = 0
+   passedThree = 0
+   previousResult = " "
+   printedSpace = False
    # this is a debug sample entry for the machine to make sure it works
    sample = [0.538109,-0.68696,0.48839,-0.560825,0.719204,-0.410147,-0.509568,
             0.733951,-0.449062,-0.386425,0.775132,-0.499846,-0.2683,0.802056,
@@ -130,7 +135,6 @@ class aslListener(Leap.Listener):
    # data and where the data is pulled and sent to the machine
    def on_frame(self, controller):
       frame = controller.frame()
-      #print "got a frame"
       distal_directions = []
       inter_directions = []
       proximal_directions = []
@@ -154,17 +158,52 @@ class aslListener(Leap.Listener):
          if distal_directions:
             self.buf = multi_vector_extract(distal_directions, self.buf)
          if inter_directions:
-            self.buf =multi_vector_extract(inter_directions, self.buf)
+            self.buf = multi_vector_extract(inter_directions, self.buf)
          if proximal_directions:
-            self.buf =multi_vector_extract(proximal_directions, self.buf)
-            self.buf =vector_extract(hand_direction, self.buf)
-            self.buf =vector_extract(arm_direction, self.buf)
+            self.buf = multi_vector_extract(proximal_directions, self.buf)
+            self.buf = vector_extract(hand_direction, self.buf)
+            self.buf = vector_extract(arm_direction, self.buf)
 
          # match the data, print the result, and update the gui with the result
          print("testing frame:")
          result = compareMachine.matchGesture(np.array(self.buf))
-         self.buf = [] # don't forget to reset this!
+         #self.buf = [] # don't forget to reset this!
+         if len(self.buf) >= 1479:
+            self.buf = self.buf[51:]
          print(result)
-         self.report.textChanged(result)
-         print "\n\n"
-         time.sleep(2.2) #how long to wait between matchings
+
+         if result == self.previousResult:
+            self.resultCount += 1
+         else:
+            self.resultCount = 0
+
+         self.previousResult = result
+         if self.resulCount == 2:
+            self.printedSpace = False
+            self.report.textChanged(result)
+
+
+
+
+         print "\n"
+         #time.sleep(2.2) #how long to wait between matchings
+      else:
+         #append an entire frame of 0.0 to the buffer and shift the buffer as usual
+         iList = [0.0] * 51
+         self.buf = self.buf + iList;
+         del iList[:]
+         self.buf = self.buf[51:]
+         self.frameCount += 1
+
+         #37 frames is about a second
+         if self.frameCount == 37:
+            self.passedThree += 1
+            #it's been three seconds, so clear the text displayed in view
+            if self.passedThree == 3:
+               self.passedThree = 0
+               self.report.clearText()
+            #if we go an entire second with invalid data
+            if self.printedSpace == False:
+               self.frameCount = 0
+               self.printedSpace = True
+               self.report.textChanged(' ')#print a space
