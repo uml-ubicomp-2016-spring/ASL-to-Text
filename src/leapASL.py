@@ -96,6 +96,9 @@ class aslListener(Leap.Listener):
    #listener instantiated in Ctrl
    buf = []
    frameCount = 0
+   resultCount = 0
+   passedThree = 0
+   previousResult = " "
    printedSpace = False
    # this is a debug sample entry for the machine to make sure it works
    sample = [0.538109,-0.68696,0.48839,-0.560825,0.719204,-0.410147,-0.509568,
@@ -168,17 +171,39 @@ class aslListener(Leap.Listener):
          if len(self.buf) >= 1479:
             self.buf = self.buf[51:]
          print(result)
-         self.printedSpace = False
-         self.report.textChanged(result)
+
+         if result == self.previousResult:
+            self.resultCount += 1
+         else:
+            self.resultCount = 0
+
+         self.previousResult = result
+         if self.resulCount == 2:
+            self.printedSpace = False
+            self.report.textChanged(result)
+
+
+
+
          print "\n"
          #time.sleep(2.2) #how long to wait between matchings
       else:
+         #append an entire frame of 0.0 to the buffer and shift the buffer as usual
          iList = [0.0] * 51
          self.buf = self.buf + iList;
          del iList[:]
          self.buf = self.buf[51:]
          self.frameCount += 1
-         if self.frameCount == 37 and self.printedSpace == False:
-             self.frameCount = 0
-             self.printedSpace = True
-             self.report.textChanged(' ')
+
+         #37 frames is about a second
+         if self.frameCount == 37:
+            self.passedThree += 1
+            #it's been three seconds, so clear the text displayed in view
+            if self.passedThree == 3:
+               self.passedThree = 0
+               self.report.clearText()
+            #if we go an entire second with invalid data
+            if self.printedSpace == False:
+               self.frameCount = 0
+               self.printedSpace = True
+               self.report.textChanged(' ')#print a space

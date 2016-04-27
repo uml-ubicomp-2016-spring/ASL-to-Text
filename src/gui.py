@@ -62,6 +62,10 @@ class Model():
          self.txt = text
       self.ctrl.gotTxtUpdate()  #signal controller of change
 
+   def clearText(self):
+      self.txt = ''
+      self.ctrl.gotTxtUpdate()
+
 class View:
    def loadView(self):
       self.subtitle = Label(self.ctrl, font=('Helvetica','36'), fg='gray23', bg='gray30', anchor=S, pady=50)
