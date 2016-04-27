@@ -8,7 +8,7 @@
 #
 
 __author__ = "Kevin Dibble, Jasmine Moran, Susan Souza"
-__version__ = "0.9"
+__version__ = "0.95"
 __status__  = "Development"
 
 import gui
@@ -19,5 +19,5 @@ def main():
 
 #start the project
 if __name__ == '__main__':
-   print("let's go!")
+  # print("let's go!")
    main()

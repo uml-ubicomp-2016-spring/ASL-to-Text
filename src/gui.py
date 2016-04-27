@@ -56,7 +56,7 @@ class Model():
       return self.txt
 
    def textChanged(self, text):
-      if len(self.txt) < 26:
+      if len(self.txt) < 50:
          self.txt = self.txt + text
       else:
          self.txt = text
@@ -68,9 +68,9 @@ class Model():
 
 class View:
    def loadView(self):
-      self.subtitle = Label(self.ctrl, font=('Helvetica','36'), fg='gray23', bg='gray30', anchor=S, pady=50)
+      self.subtitle = Label(self.ctrl, font=('Helvetica','36'), fg='gray30', bg='gray32', anchor=S, pady=50)
       self.subtitle.master.wm_attributes("-topmost", True)
-      self.subtitle.master.wm_attributes("-transparentcolor", "gray30")
+      self.subtitle.master.wm_attributes("-transparentcolor", "gray32")
       self.subtitle.pack(fill=BOTH, expand=1, side=BOTTOM)
 
    def __init__(self, ctrl):
