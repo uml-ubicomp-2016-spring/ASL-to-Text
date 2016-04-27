@@ -6,10 +6,22 @@ Simple ASL-to-Text translator using the LeapMotion
 + [KDibble](http://github.com/KDibble)
 + [jasminemoran](http://github.com/jasminemoran)
 
-## Progress (Week 4/19 - 4/25) -- forecasted
+## Progress (Week 4/25 - 4/29 and 4/29 - 5/2)
 - [x] Implement motion gestures
+- [x] Break up potential words with spaces
+- [x] Disallow an abundance of concurrent matches based on the large sets of frames used to match
+- [x] Allow concurrent matches if user's hand is briefly absent as is necessary for various cases (e.g, 'ee', 'll', 'ff')
+- [ ] Look into packaging project into executable
+- [ ] Project report (group)
+- [ ] Project report (individual)
+- [ ] Demo video
+- [ ] Project presentation materials
 
-## Progress (Week 4/12 - 4/18) -- proposed items (DEMO ON 4/22. If we can't by 4/19, let Prof. Chen know)
+## Progress (Week 4/19 - 4/25)
+- [ ] Implement motion gestures
+- [x] Gather the rest of the data for required gestures
+
+## Progress (Week 4/12 - 4/18)
 - [x] Integrate machine learning into gestures
 - [x] Gather all of the data for the required gestures (MOSTLY)
 
