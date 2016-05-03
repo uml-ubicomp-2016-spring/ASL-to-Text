@@ -21,21 +21,22 @@ Core features for this short iteration were to detect a specific sign from a use
 piece of the application a separate and atomic as possible.
 
 ## File Structure
-ASL-to-Text<br/>
-   ├── lib <br/>
-   ├── data <br/>
-   |    ├── gestureData.csv<br/>
-   |    ├── gestureDataSimple.csv<br/>
-   |    └── gestureDataLong.csv<br/>
+```ASL-to-Text
+   ├── lib
+   ├── data
+   |    ├── gestureData.csv
+   |    ├── gestureDataSimple.csv
+   |    └── gestureDataLong.csv
    ├── src<br/>
-   |    ├── asl2txt.py<br/>
-   |    ├── leapASL.py<br/>
-   |    ├── matchASL.py<br/>
-   |    └── gui.py<br/>
-   └── utils<br/>
-        ├── machineLearningTest.py<br/>
-        ├── shiftingTests.py<br/>
-        └── printVectors.py<br/>
+   |    ├── asl2txt.py
+   |    ├── leapASL.py
+   |    ├── matchASL.py
+   |    └── gui.py
+   └── utils
+        ├── machineLearningTest.py
+        ├── shiftingTests.py
+        └── printVectors.py
+```
 
 /lib: resources like the Leap library (Leap.py)<br/>
 /data: our training data and superfluous testing data<br/>
