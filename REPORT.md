@@ -21,7 +21,8 @@ Core features for this short iteration were to detect a specific sign from a use
 piece of the application a separate and atomic as possible.
 
 ## File Structure
-```ASL-to-Text
+```
+ASL-to-Text
    ├── lib
    ├── data
    |    ├── gestureData.csv
