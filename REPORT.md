@@ -27,7 +27,7 @@ piece of the application a separate and atomic as possible.
    |    ├── gestureData.csv
    |    ├── gestureDataSimple.csv
    |    └── gestureDataLong.csv
-   ├── src<br/>
+   ├── src
    |    ├── asl2txt.py
    |    ├── leapASL.py
    |    ├── matchASL.py
