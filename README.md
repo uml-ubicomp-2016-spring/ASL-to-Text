@@ -6,16 +6,18 @@ Simple ASL-to-Text translator using the LeapMotion
 + [KDibble](http://github.com/KDibble)
 + [jasminemoran](http://github.com/jasminemoran)
 
+## Demo Video:
+[![Demo Video](/utils/img/asl2txt.png)](https://drive.google.com/file/d/0B0DhBKfxZvDISU1EU3RKd2lxMWc/view?usp=drivesdk)
+
 ## Progress (Week 4/25 - 4/29 and 4/29 - 5/2)
 - [x] Implement motion gestures
 - [x] Break up potential words with spaces
 - [x] Disallow an abundance of concurrent matches based on the large sets of frames used to match
 - [x] Allow concurrent matches if user's hand is briefly absent as is necessary for various cases (e.g, 'ee', 'll', 'ff')
-- [ ] Look into packaging project into executable
-- [ ] Project report (group)
-- [ ] Project report (individual)
-- [ ] Demo video
-- [ ] Project presentation materials
+- [x] Project report (group)
+- [x] Project report (individual)
+- [x] Demo video
+- [x] Project presentation materials
 
 ## Progress (Week 4/19 - 4/25)
 - [ ] Implement motion gestures
